@@ -33,13 +33,14 @@ class GreedyBestFirstSearch:
             if(Grid.objective_test(grid, parent_n.state)):
                 return Solution(parent_n, reached)
             
-            for action in Grid.actions(grid, parent_n.state):
-                new_state = Grid.result(grid, parent_n.state, action)
-                accum_cost = parent_n.cost + Grid.individual_cost(grid, parent_n.state, action)
+        for action in Grid.actions(grid, parent_n.state):
+            new_state = Grid.result(grid, parent_n.state, action)
+            accum_cost = parent_n.cost + Grid.individual_cost(grid, parent_n.state, action)
+        
+            if new_state not in reached:
+                child_n = Node("", new_state, accum_cost, parent_n, action)
+                reached[new_state] = accum_cost
+                frontier.add(child_n, Grid.heuristic_manhattan(grid, child_n.state))
 
-                if new_state not in reached or accum_cost < reached[new_state]:
-                    child_n = Node("", new_state, accum_cost, parent_n, action)
-                    reached[new_state] = accum_cost
-                    frontier.add(child_n, Grid.heuristic_manhattan(grid, child_n.state))
 
         return NoSolution(reached)
